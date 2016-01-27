@@ -1,0 +1,177 @@
+*astronomer.txt*  Plugin for automatically setting indent/whitespace settings
+*astronomer* *vim-astronomer*
+
+         Author:  Rich Cheng <http://whileyouweregone.co.uk>
+       Homepage:  http://github.com/sedm0784/vim-astronomer
+      Copyright:  © 2015 Rich Cheng
+        Licence:  Astronomer uses the same licence as Vim. (See |license|.)
+        Version:  0.0.1
+
+==============================================================================
+          __    __  _____  ___   ___   _      ___   _      ____  ___  ~
+         / /\  ( (`  | |  | |_) / / \ | |\ | / / \ | |\/| | |_  | |_) ~
+        /_/--\ _)_)  |_|  |_| \ \_\_/ |_| \| \_\_/ |_|  | |_|__ |_| \ ~
+
+                                  Studies space, so you don't have to.
+==============================================================================
+CONTENTS                                                 *astronomer-contents*
+
+    1. Introduction ...........................|astronomer-introduction|
+    2. Usage ..................................|astronomer-usage|
+        2.1 Options ...........................|astronomer-options|
+        2.2 Commands ..........................|astronomer-commands|
+    3. Changelog ..............................|astronomer-changelog|
+    4. Issues .................................|astronomer-issues|
+        4.1 Known Issues ......................|astronomer-known-issues|
+        4.2 Reporting Issues ..................|astronomer-reporting-issues|
+    5. Credits ................................|astronomer-credits|
+
+==============================================================================
+1. Introduction                                      *astronomer-introduction*
+
+Astronomer automatically sets Vim's indent and whitespace-handling options,
+|'expandtab'|, |'shiftwidth'|, |'tabstop'|, and |'list'|,
+when you open a file. Specifically:
+
+- If the file is indented mostly or entirely with spaces, Astronomer will set
+  |'noexpandtab'|,
+- If the file is indented mostly or entirely with tabs, Astronomer will set
+  |'expandtab'|,
+- If the file uses the same indentation throughout, Astronomer will set
+  |'nolist'|,
+- If the indentation method varies through the file, Astronomer will set
+  |'list'|,
+- If the file contains any lines that are space-indented, Astronomer will
+  attempt to figure out what size of indentation is used, and will set both
+  |'shiftwidth'| and |'tabstop'| to that value.
+
+==============================================================================
+2. Usage                                                    *astronomer-usage*
+
+Astronomer allows you not to have to think about Vim's indentation/whitespace
+settings except when it's absolutely necessary, so once it is installed you
+should generally be able to forget it's there. However, it does include a very
+small number of configuration options and interactive features, which are
+described below:
+
+------------------------------------------------------------------------------
+2.1 Options                                               *astronomer-options*
+
+                                                       *'g:astronomer_widths'*
+'g:astronomer_widths'        list (default: [1, 2, 3, 4, 5, 6, 7, 8])
+
+    A list of shiftwidth/tabstop settings which you would like Astronomer to
+    consider using. It shouldn't be necessary to change this, but if you find
+    Astronomer consistently picks an uncommon shiftwidth/tabstop, or if there
+    are certain indentations you are confident you will never encounter, then
+    you can restrict the values more (or support indentations higher than 8)
+    by changing this value:
+>
+        let g:astronomer_widths = [2, 4, 8]
+<
+                                                       *'g:loaded_astronomer'*
+'g:loaded_astronomer'        number (default: not set)
+
+    Use this to disable the plugin completely:
+>
+        let g:loaded_astronomer = 1
+<
+                                                  *'g:astronomer_dark_matter'*
+'g:astronomer_dark_matter'   number (default: not set)
+
+    Astronomer is designed so that, once installed, you can forget it's there.
+    If you want to take this idea to its extreme, you can use this option to
+    enable a sort of "stealth mode" wherein Astronomer does not create any
+    command-line commands:
+>
+        let g:astronomer_dark_matter = 1
+<
+------------------------------------------------------------------------------
+2.2 Commands                                             *astronomer-commands*
+
+                                                        *astronomer-:StarGaze*
+:StarGaze      Run the detection for the buffer in which the command is run.
+               Astronomer does this automatically whenever a file is opened,
+               but there are a few cases where you might want to run it
+               manually. (e.g. after pasting a lot of text into a new, blank
+               file). This command also displays the results of the analysis.
+
+                                                     *astronomer-:Astronomize*
+:Astronomize {file}
+               If you find a file where Astronomer doesn't do what you'd
+               expect, you can use this to create a new file {file}, which
+               contains only the indentation from the current buffer. You can
+               then send this to me without any danger of me stealing all your
+               secrets. (Unless you are programming in the esoteric
+               programming language Whitespace, in which case, seriously? Come
+               on, now.)
+
+==============================================================================
+3. Changelog                                            *astronomer-changelog*
+
+Version 0.0.1 - Initial dev version.
+
+==============================================================================
+4. Issues                                                  *astronomer-issues*
+
+------------------------------------------------------------------------------
+4.1 Known Limitations                                *astronomer-known-issues*
+
+Indentation is used in two slightly different ways in source code:
+
+1. To indicate program flow (e.g. in an if block),
+2. For visual alignment.
+
+>
+                      if (test)
+                      {
+ Indentation type 1 ->    call_function(parameter_one,
+ Indentation type 2 ->                  parameter_two,
+                    ->                  parameter_three);
+                      }
+<
+
+The first type of indentation generally uses a standard indent-size, but the
+second can be more variable.
+
+Astronomer is not syntax-aware. It bases its choices on the indentation alone
+(as can be seen when you use the |:Astronomize| command.) Therefore it cannot
+distinguish between the two different types of indentation.
+
+For these reasons, it is possible to construct a file where Astronomer picks
+the "wrong" value for shiftwidth/tabstop. In all likelihood a small number of
+real source files also display this problem. If you find one, please send me
+an Astronomized version so I can see if I can fix it!
+
+------------------------------------------------------------------------------
+4.2 Reporting Issues                             *astronomer-reporting-issues*
+
+If you find any bugs, or if you have a file Astronomer doesn't perform
+optimally on, let me know! The best place for bug reports is the GitHub
+repository:
+
+    https://github.com/sedm0784/vim-astronomer
+
+However, if you prefer, feel free to email or tweet instead:
+
+    astronomer at whileyouweregone dot co dot uk
+    @sedm0784
+
+If you want to send me the file that causes the problem, you can use the
+|:Astronomize| command to create a file that contains nothing but
+indentation. If you have changed |'g:astronomer_widths'| from the default, be
+sure to include that information in your bug report!
+
+==============================================================================
+5. Credits                                                *astronomer-credits*
+
+Astronomer was written by Rich Cheng.
+
+The banner at the top of this help file was created using the "Broadway KB"
+FIGlet font at the Text ASCII Art Generator:
+
+    http://patorjk.com/software/taag/
+
+==============================================================================
+ vim:tw=78:ts=8:ft=help:norl:
+
