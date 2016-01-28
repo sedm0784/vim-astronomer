@@ -23,6 +23,7 @@ function! astronomer#sunset(tab_lines, space_lines, broken_lines, indent_change_
   setlocal modifiable
   %d
   execute "resize " . (7)
+  setlocal winfixheight
   setlocal nowrap
   call setline(1, printf("   Tab lines: %4d: %3d%%", a:tab_lines, float2nr(a:tab_lines * 100.0 / total_lines)))
   call setline(2, printf(" Space lines: %4d: %3d%%", a:space_lines, float2nr(a:space_lines * 100.0 / total_lines)))
