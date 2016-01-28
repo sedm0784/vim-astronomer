@@ -165,55 +165,57 @@ function! s:analyse()
     " the user cannot see the whitespace on such lines, it could easily not
     " match the surrounding indention style/size. (Which we discovered
     " in real-world files.)
-    if line !~ '^\s*$'
-      if tab_end > 0
-        let tab_lines += 1
-      else
-        " Unindented lines have 0 spaces of indentation
-        if space_end < 0
-          let space_end = 0
+    if line =~ '^\s*$'
+      continue
+    endif
+
+    if tab_end > 0
+      let tab_lines += 1
+    else
+      " Unindented lines have 0 spaces of indentation
+      if space_end < 0
+        let space_end = 0
+      endif
+
+      " N.B. For the purposes of calculating tab-size, we are ignoring
+      " tab-indented lines entirely. This could technically result in
+      " picking a multiple of the correct value (if all the lines at the
+      " intermediate indentation are tab-indented), but we'd be unlucky to
+      " actually come across such a file.
+
+      if space_end != previous_indent
+        " Weight changes close to start of line heavier than ones far away,
+        " as they are more likely to be program-flow indentation and not
+        " alignment indentation.
+        let indent_change_score = 1.0
+        if space_end < g:astronomer_line_start_proximity && previous_indent < g:astronomer_line_start_proximity
+         let indent_change_score += g:astronomer_line_start_weighting * (space_end + previous_indent) / 2.0
         endif
 
-        " N.B. For the purposes of calculating tab-size, we are ignoring
-        " tab-indented lines entirely. This could technically result in
-        " picking a multiple of the correct value (if all the lines at the
-        " intermediate indentation are tab-indented), but we'd be unlucky to
-        " actually come across such a file.
+        " Because of languages like Python where you can outdent multiple
+        " levels in a single line, should we weight indents more heavily
+        " than outdents? It will require multiple indents to get to a single
+        " larger outdent, so perhaps this happens naturally.
 
-        if space_end != previous_indent
-          " Weight changes close to start of line heavier than ones far away,
-          " as they are more likely to be program-flow indentation and not
-          " alignment indentation.
-          let indent_change_score = 1.0
-          if space_end < g:astronomer_line_start_proximity && previous_indent < g:astronomer_line_start_proximity
-           let indent_change_score += g:astronomer_line_start_weighting * (space_end + previous_indent) / 2.0
-          endif
+        let indent_change = abs(space_end - previous_indent)
+        let previous_indent = space_end
+        if has_key(indent_change_dict, indent_change)
+          let indent_change_dict[indent_change] += indent_change_score
+        else
+          let indent_change_dict[indent_change] = indent_change_score
+        endif
+      endif
 
-          " Because of languages like Python where you can outdent multiple
-          " levels in a single line, should we weight indents more heavily
-          " than outdents? It will require multiple indents to get to a single
-          " larger outdent, so perhaps this happens naturally.
-
-          let indent_change = abs(space_end - previous_indent)
-          let previous_indent = space_end
-          if has_key(indent_change_dict, indent_change)
-            let indent_change_dict[indent_change] += indent_change_score
+      if space_end > 0
+        let space_lines += 1
+        if exists('g:astronomer_super_secret_debug_option')
+          if has_key(space_indent_dict, space_end)
+            let space_indent_dict[space_end] += 1
           else
-            let indent_change_dict[indent_change] = indent_change_score
+            let space_indent_dict[space_end] = 1
           endif
         endif
-
-        if space_end > 0
-          let space_lines += 1
-          if exists('g:astronomer_super_secret_debug_option')
-            if has_key(space_indent_dict, space_end)
-              let space_indent_dict[space_end] += 1
-            else
-              let space_indent_dict[space_end] = 1
-            endif
-          endif
-        endif
-      end
+      endif
     endif
   endfor
 
@@ -333,3 +335,4 @@ if !exists('g:astronomer_dark_matter')
     command! -nargs=1 -complete=file AstronomerReduce call astronomer#reduce_file("<args>")
   endif
 endif
+
