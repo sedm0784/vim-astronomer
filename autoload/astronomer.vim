@@ -2,8 +2,8 @@ scriptencoding
 
 " Debug function that opens a debug buffer "__NightSky__"" in a split and
 " outputs results
-function! astronomer#sunset(tab_lines, space_lines, broken_lines, indent_change_dict, space_indent_dict, recommendation, star_chart)
-  let total_lines = a:tab_lines + a:space_lines + a:broken_lines
+function! astronomer#sunset(tabspace_lines, tab_lines, space_lines, broken_lines, indent_change_dict, space_indent_dict, sw_recommendation, sw_confidence, ts_recommendation, ts_confidence, star_chart)
+  let total_lines = a:tabspace_lines + a:tab_lines + a:space_lines + a:broken_lines
   let this_window = winnr()
   let scratch_window = bufwinnr("__NightSky__")
   if (scratch_window == -1)
@@ -21,22 +21,18 @@ function! astronomer#sunset(tab_lines, space_lines, broken_lines, indent_change_
   endif
   setlocal noreadonly
   setlocal modifiable
-  %d
-  execute "resize " . (7)
   setlocal winfixheight
   setlocal nowrap
-  call setline(1, printf("   Tab lines: %4d: %3d%%", a:tab_lines, float2nr(a:tab_lines * 100.0 / total_lines)))
-  call setline(2, printf(" Space lines: %4d: %3d%%", a:space_lines, float2nr(a:space_lines * 100.0 / total_lines)))
-  call setline(3, printf("Broken lines: %4d: %3d%%", a:broken_lines, float2nr(a:broken_lines * 100.0 / total_lines)))
-  call setline(4, printf("Raw Indents: %s", string(a:space_indent_dict)))
-  let l = 5
-  if a:space_lines > 0
-    " Output information about method 3
-    call setline(5, printf("Changes: %s", string(a:indent_change_dict)))
-    call setline(6, printf("Recommendation: %d", a:recommendation))
-    let l += 2
-  endif
-  call setline(l, a:star_chart)
+  %d
+  execute "resize " . (8)
+  call setline(1, printf("Tab/Sp lines: %4d: %3d%%", a:tabspace_lines, float2nr(a:tabspace_lines * 100.0 / total_lines)))
+  call setline(2, printf("   Tab lines: %4d: %3d%%", a:tab_lines, float2nr(a:tab_lines * 100.0 / total_lines)))
+  call setline(3, printf(" Space lines: %4d: %3d%%", a:space_lines, float2nr(a:space_lines * 100.0 / total_lines)))
+  call setline(4, printf("Broken lines: %4d: %3d%%", a:broken_lines, float2nr(a:broken_lines * 100.0 / total_lines)))
+  call setline(5, printf("Raw Indents: %s", string(a:space_indent_dict)))
+  call setline(6, printf("Changes: %s", string(a:indent_change_dict)))
+  call setline(7, printf("Recommendation: shiftwidth:%d (%d%%) tabstop:%d (%d%%)", a:sw_recommendation, float2nr(a:sw_confidence), a:ts_recommendation, float2nr(a:ts_confidence)))
+  call setline(8, a:star_chart)
   " Switch back to previous window. Not using `wincmd p` because minibufexpl seems to break it
   setlocal nomodifiable
   setlocal readonly

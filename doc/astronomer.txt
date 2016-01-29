@@ -109,6 +109,8 @@ described below:
 ==============================================================================
 3. Changelog                                            *astronomer-changelog*
 
+Version 0.1.0 - |'smarttab'| indentation detection. Sets |'shiftwidth'| and
+                |'tabstop'| independently when appropriate.
 Version 0.0.1 - Initial dev version.
 
 ==============================================================================
