@@ -33,7 +33,7 @@ Astronomer allows me to have list turned off unless I *really* need it: it's a
 bit like having your own personal laundrette. But instead of taking care of your
 whites, this laundrette takes care of your whitespace.
 
-##  I hope you are better at writing VimScript than you are at writing analogies.
+##  I hope you are better at writing Vimscript than you are at writing analogies.
 
 There's only one way to find out!
 
