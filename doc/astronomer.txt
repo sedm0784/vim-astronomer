@@ -141,9 +141,9 @@ Astronomer is not syntax-aware. It bases its choices on the indentation alone
 distinguish between the two different types of indentation.
 
 For these reasons, it is possible to construct a file where Astronomer picks
-the "wrong" value for shiftwidth/tabstop. In all likelihood a small number of
-real source files also display this problem. If you find one, please send me
-an Astronomized version so I can see if I can fix it!
+the "wrong" value for |'shiftwidth'|/|'tabstop'|. In all likelihood a small
+number of real source files also display this problem. If you find one, please
+send me an Astronomized version so I can see if I can fix it!
 
 ------------------------------------------------------------------------------
 4.2 Reporting Issues                             *astronomer-reporting-issues*
@@ -176,4 +176,3 @@ FIGlet font at the Text ASCII Art Generator:
 
 ==============================================================================
  vim:tw=78:ts=8:ft=help:norl:
-

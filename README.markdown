@@ -6,8 +6,8 @@ Astronomer
 ## What is Astronomer?
 
 Astronomer is a plugin that scans files when they are opened, and
-automatically sets Vim's indent and whitespace-handling options ('expandtab',
-'shiftwidth', and 'tabstop') to appropriate values.
+automatically sets Vim's indent and whitespace-handling options (`'expandtab'`,
+`'shiftwidth'`, and `'tabstop'`) to appropriate values.
 
 ##  Didn't Tim Pope already write that?
 
@@ -20,7 +20,7 @@ most important feature of all.
 
 ##  Which is?
 
-It turns on 'list' when it discovers inconsistent indentation.
+It turns on `'list'` when it discovers inconsistent indentation.
 
 ## Couldn't I just turn list on in my .vimrc?
 
